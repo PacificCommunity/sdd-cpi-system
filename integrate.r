@@ -58,7 +58,7 @@
    ##    Set working directory
    ##
       setwd("C:\\git\\pricing_system")
-      # setwd("C:\\From BigDisk\\GIT\\R_Fundamentals_Training\\Fundamentals Graphics and Reporting")
+      setwd("C:\\GIT_Projects\\sdd-cpi-system")
    ##
    ##   Modular-programmed code from here down. Each following programme
    ##      needs to be able to 'stand alone' in the sense that it starts of 
@@ -69,17 +69,18 @@
       ##
       ##    STEP 1:
       ##
-         source("Programmes/Read_Spreadsheets.r") # This does blah blah blah
+         source("Programmes/Read_Spreadsheets.r")  # This does blah blah blah
+         source("Programmes/Read_CSVs.r")          # This does blah blah blah
 
       ##
       ##    STEP 2:
       ##
-        source("Programmes/Clean_div1foods") # This does blah blah blah
-        source("Programmes/Clean_div2alc") # This does blah blah blah
-        source("Programmes/Clean_div4energy") # This does blah blah blah
-        source("Programmes/Clean_div6health") # This does blah blah blah
-        source("Programmes/Clean_div8coms") # This does blah blah blah
-        source("Programmes/Clean_div10edu") # This does blah blah blah
+        source("Programmes/Clean_div1food.r")      # This does blah blah blah
+        source("Programmes/Clean_div2alc.r")       # This does blah blah blah
+        source("Programmes/Clean_div4energy.r")    # This does blah blah blah
+        source("Programmes/Clean_div6health.r")    # This does blah blah blah
+        source("Programmes/Clean_div8coms.r")      # This does blah blah blah
+        source("Programmes/Clean_div10edu.r")      # This does blah blah blah
 
       ##
       ##    STEP 3:
