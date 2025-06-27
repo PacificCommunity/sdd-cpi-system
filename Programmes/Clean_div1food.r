@@ -89,6 +89,17 @@
 
       Div1food$Period <- as.Date(paste0("15-",Div1food$Period ), "%d-%b-%y")
       Div1food$value  <- as.numeric(Div1food$value)
+
+   ##
+   ## Make sure this detail map to the Regimen
+   ##
+      Tab_Subclass <- unique(Div1food$Subclass)
+      Tab_Class    <- unique(Div1food$Class)
+
+      Regimen_Subclass <- unique(Regimen$Subclass)
+      Regimen_Class    <- unique(Regimen$Class)
+
+
       
    ##
    ## Save files our produce some final output of something
