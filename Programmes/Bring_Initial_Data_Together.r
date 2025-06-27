@@ -16,7 +16,11 @@
    ##
       load('Data_Intermediate/Div1food.rda')
       load('Data_Intermediate/Div2alc.rda')
-
+      
+      ##
+      ##    Grab the Regimen
+      ##
+      
    ##
    ## Step 1: Stick all of the divisions together
    ##
@@ -29,13 +33,17 @@
       
       unique(All_Divisions$Component)
       ##
-      ##    Drop these into a CSV for standardisation
+      ##    Drop these into a CSV for standardisation - only run this code if you have new files which needs standardised
+      ##       else it will overwrite your previous corrections.
       ##
-         write.csv(data.frame(Old_Name = unique(All_Divisions$Component),
-                              New_Name = unique(All_Divisions$Component)), 
-                   file = "Data_Raw/Component_Correction.csv",
-                   row.names = FALSE)
-      
+         ## write.csv(data.frame(Old_Name = unique(All_Divisions$Component),
+         ##                      New_Name = unique(All_Divisions$Component)), 
+         ##           file = "Data_Raw/Component_Correction.csv",
+         ##           row.names = FALSE)
+      ##
+      ##    Read these from standardisation
+      ##
+          load('Data_Intermediate/RAWDATA_XXComponent_Correction.rda')
 
    ##
    ##    Merge the Component (which is uncleaned) with the file RAWDATA_XXComponent_Correction
@@ -53,24 +61,25 @@
    ##       will recreate the "Old_Name" and "New_Name" and the Component_Correction.csv, but this time the old and the new will be exactly the
    ##       same - the corrected 
    ##
+      All_Divisions <- merge(All_Divisions,
+                             RAWDATA_XXComponent_Correction,
+                             by.x = c("Component"),
+                             by.y = c("Old_Name"),
+                             all.x = TRUE)
+      All_Divisions <- All_Divisions[,names(All_Divisions) != "Component"]              
+      names(All_Divisions)[names(All_Divisions) == "New_Name"] <- "Component"
       
-      
-      
-      unique(All_Divisions$Subclass)
-      unique(All_Divisions$Code)
-      unique(All_Divisions$Class)
-   
-      table(All_Divisions$Class, All_Divisions$Code)
-      table(All_Divisions$Subclass, All_Divisions$Class)
-
-
-
-   
-   
    ##
-   ## Step 3: xxxxxxxxxxx
+   ## Step 3: Generate the geomeans at the Subclass level
    ##
-
+      GeoMeans <- with(All_Divisions,
+                             aggregate(list(Geometric_Mean = log(value)),
+                                       list(Subclass = Subclass,
+                                            Period = Period),
+                                     mean, 
+                                     na.rm = TRUE))      
+      GeoMeans$Geometric_Mean <- exp(GeoMeans$Geometric_Mean)
+      GeoMeans[GeoMeans$Subclass == "Rice",]
 
 
    ##

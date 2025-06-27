@@ -59,6 +59,8 @@
    ##
       setwd("C:\\git\\pricing_system")
       setwd("C:\\GIT_Projects\\sdd-cpi-system")
+      setwd("C:\\From BigDisk\\GIT\\sdd-cpi-system")
+      
    ##
    ##   Modular-programmed code from here down. Each following programme
    ##      needs to be able to 'stand alone' in the sense that it starts of 
