@@ -69,27 +69,30 @@
    ##       output. 
    ##
       ##
-      ##    STEP 1:
+      ##    STEP 1:  Run some automatic readin scripts over the member supplied spreadsheets
       ##
          source("Programmes/Read_Spreadsheets.r")  # This does blah blah blah
          source("Programmes/Read_CSVs.r")          # This does blah blah blah
-
+         
       ##
-      ##    STEP 2:
+      ##    STEP 2:  Clean the regimen. This will be used to ensure all of the product descriptions are uniform
       ##
         source("Programmes/Clean_Regimen.r")       # This does blah blah blah
         
+      ##
+      ##    STEP 3:  Clean the spreadsheet data - do this only once
+      ##
         source("Programmes/Clean_div1food.r")      # This does blah blah blah
         source("Programmes/Clean_div2alc.r")       # This does blah blah blah
-        source("Programmes/Clean_div4energy.r")    # This does blah blah blah
-        source("Programmes/Clean_div6health.r")    # This does blah blah blah
-        source("Programmes/Clean_div8coms.r")      # This does blah blah blah
-        source("Programmes/Clean_div10edu.r")      # This does blah blah blah
+        #source("Programmes/Clean_div4energy.r")    # This does blah blah blah
+        #source("Programmes/Clean_div6health.r")    # This does blah blah blah
+        #source("Programmes/Clean_div8coms.r")      # This does blah blah blah
+        #source("Programmes/Clean_div10edu.r")      # This does blah blah blah
 
       ##
-      ##    STEP 3:
+      ##    STEP 3:  Aggregate all of the cleaned tabs and generated the CPI
       ##
-         source("Programmes/xxxxxxxx.r") # This does blah blah blah
+         source("Programmes/Bring_Initial_Data_Together.r") # This does blah blah blah
       ##
       ##    STEP 4:
       ##

@@ -48,14 +48,18 @@
       
       for (i in 1:nrow(Regimen)) 
       {
-          Regimen$Groups[i] <- Groups$V1[which(Groups$V2 %in% str_sub(Regimen$COICOP[i], start = 1, end = 2) )]
-          Regimen$Class[i]  <- Class$V1[ which( Class$V2 %in% str_sub(Regimen$COICOP[i], start = 1, end = 4) )]
+          Regimen$Groups[i] <- str_squish(Groups$V1[which(Groups$V2 %in% str_sub(Regimen$COICOP[i], start = 1, end = 2) )])
+          Regimen$Class[i]  <- str_squish(Class$V1[ which( Class$V2 %in% str_sub(Regimen$COICOP[i], start = 1, end = 4) )])
       }      
+      
       
    ##
    ## Save files our produce some final output of something
    ##
       names(Regimen) <- c('Class', 'COICOP', 'Item_nos', 'Subclass', 'Weights', 'Groups', 'Division')
+      Regimen$Subclass <- str_squish(Regimen$Subclass)
+      Regimen$Subclass <- ifelse(str_detect(Regimen$Subclass, "Condensed Milk with sugar"),"Condensed Milk with Sugar (Carnation)", Regimen$Subclass)
+      
       save(Regimen, file = 'Data_Intermediate/Regimen.rda')
 ##
 ##    And we're done

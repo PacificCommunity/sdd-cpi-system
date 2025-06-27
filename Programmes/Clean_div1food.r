@@ -29,7 +29,6 @@
       Div1food$Code     = ""
       Div1food$Class = ""
       
-      
       for (i in 1:nrow(Div1food)) 
       {
           Div1food$Subclass[i] <- ifelse(str_detect(Div1food$V1[i],"\\."),Div1food$V2[i],"") 
@@ -91,15 +90,28 @@
       Div1food$value  <- as.numeric(Div1food$value)
 
    ##
-   ## Make sure this detail map to the Regimen
+   ## Make sure this detail maps to the Regimen
    ##
-      Tab_Subclass <- unique(Div1food$Subclass)
-      Tab_Class    <- unique(Div1food$Class)
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Division %in% c("Non alcohilc beaverages", "Food")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Division %in% c("Non alcohilc beaverages", "Food")])
+      
+      Tab_Subclass     <- unique(Div1food$Subclass)
+      Tab_Class        <- unique(Div1food$Class)
 
-      Regimen_Subclass <- unique(Regimen$Subclass)
-      Regimen_Class    <- unique(Regimen$Class)
+      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
+      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
 
-
+   ##
+   ## Correct the ones that doesnt
+   ##
+      Div1food$Subclass <- ifelse(str_detect(Div1food$Subclass, "Condensed Milk with sugar"),"Condensed Milk with Sugar (Carnation)", 
+                           ifelse(str_detect(Div1food$Subclass, "Pop Corns, Twisties"),"Snacks (Pop Corns, Twisties, Bongoes....)", 
+                           ifelse(str_detect(Div1food$Subclass, "Apple, Orange"),"Fruit Juice (Apple, Orange)", 
+                           ifelse(str_detect(Div1food$Subclass, "Cola Flavour Soft Drink"),"Cola Flavour Soft Drink (Coca, Pepsi)", Div1food$Subclass))))
+      ##
+      ##    Make a choice on the "Canned Sliced Pork 198g" choice to code it to the "Other Tinned Meat" catagory
+      ##
+      Div1food$Subclass <- ifelse(str_detect(Div1food$Subclass, "Canned Sliced Pork 198g"),"Other Tinned Meat", Div1food$Subclass)
       
    ##
    ## Save files our produce some final output of something

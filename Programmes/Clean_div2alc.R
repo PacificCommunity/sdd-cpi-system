@@ -14,8 +14,7 @@
    ##
    ##    Load data from somewhere
    ##
-      load('Data_Intermediate/RAWDATA_XXComponent_Correction.rda')
-   
+      load('Data_Intermediate/Regimen.rda')
    
       load("Data_Intermediate/RAWDATA_Div 2 ,3 Alc & Tobac, clothingXXCPI_calculation_Xmas_Test_Workbook_2025.rda")
       Div2alc <- `RAWDATA_Div 2 ,3 Alc & Tobac, clothingXXCPI_calculation_Xmas_Test_Workbook_2025`
@@ -86,6 +85,45 @@
       Div2alc$Period <- as.Date(paste0("15-",Div2alc$Period ), "%d-%b-%y")
       Div2alc$value  <- as.numeric(Div2alc$value)
 
+   ##
+   ## Make sure this detail maps to the Regimen
+   ##
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Division %in% c("Alcohol", "Tobacco", "Narcotics", "Clothing", "Footwear")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Division %in% c("Alcohol", "Tobacco", "Narcotics", "Clothing", "Footwear")])
+      
+      Tab_Subclass     <- unique(Div2alc$Subclass)
+      Tab_Class        <- unique(Div2alc$Class)
+
+      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
+      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
+      
+   ##
+   ## Correct the ones that doesnt
+   ##
+      Div2alc$Subclass <- ifelse(str_detect(Div2alc$Subclass, "Whisky, Rum"),"Spirits (Whisky, Rum...)", 
+                           ifelse(str_detect(Div2alc$Subclass, "Raw Fabric"),"Raw Fabric, Calico", 
+                           ifelse(str_detect(Div2alc$Subclass, "Pant,Jean,Short"),"Pant, Jean, Short MEN", 
+                           ifelse(str_detect(Div2alc$Subclass, "Pant,Jean, Short Children"),"Pant, Jean, Short CHILDREN", 
+                           ifelse(str_detect(Div2alc$Subclass, "Pant,Jean, Short INFANT"),"Pant, Jean, Short INFANT", 
+                           ifelse(str_detect(Div2alc$Subclass, "Shirt, T-Shirt WOMEN"),"Shirt, T-shirt WOMEN", 
+                           ifelse(str_detect(Div2alc$Subclass, "Shirt,T-Shirt MEN"), "Shirt, T-shirt MEN", 
+                           ifelse(str_detect(Div2alc$Subclass, "Slippers"),"Slipper", Div2alc$Subclass))))))))
+                           
+      ##
+      ##    The regimen item "Shirt, T-shirt CHILDREN" is not collected
+      ##
+   ##
+   ## Make sure this detail maps to the Regimen
+   ##
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Division %in% c("Alcohol", "Tobacco", "Narcotics", "Clothing", "Footwear")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Division %in% c("Alcohol", "Tobacco", "Narcotics", "Clothing", "Footwear")])
+      
+      Tab_Subclass     <- unique(Div2alc$Subclass)
+      Tab_Class        <- unique(Div2alc$Class)
+
+      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
+      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
+      
    ##
    ## Save files our produce some final output of something
    ##
