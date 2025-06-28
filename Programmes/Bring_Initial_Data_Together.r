@@ -135,7 +135,8 @@
    ##
       All_Divisions <- merge(All_Divisions,
                              Regimen,
-                             by = c("Class", "Subclass"))
+                             by = c("Class", "Subclass"),
+                             all.x = TRUE)
                              
       All_Divisions <- All_Divisions[,c("Division", "Groups", "Class", "Subclass", "COICOP", "Item_nos", "Weights", "Price_Source", "Period", "Measured_Price")]
       All_Divisions <- All_Divisions[order(All_Divisions$Division, 
