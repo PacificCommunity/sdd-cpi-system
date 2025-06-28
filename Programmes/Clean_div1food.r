@@ -92,8 +92,8 @@
    ##
    ## Make sure this detail maps to the Regimen
    ##
-      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Division %in% c("Non alcohilc beaverages", "Food")])
-      Regimen_Class    <- unique(Regimen$Class[Regimen$Division %in% c("Non alcohilc beaverages", "Food")])
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("01 Food and Non-alcoholic beveages")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("01 Food and Non-alcoholic beveages")])
       
       Tab_Subclass     <- unique(Div1food$Subclass)
       Tab_Class        <- unique(Div1food$Class)
@@ -112,6 +112,17 @@
       ##    Make a choice on the "Canned Sliced Pork 198g" choice to code it to the "Other Tinned Meat" catagory
       ##
       Div1food$Subclass <- ifelse(str_detect(Div1food$Subclass, "Canned Sliced Pork 198g"),"Other Tinned Meat", Div1food$Subclass)
+   ##
+   ## Make sure this detail maps to the Regimen
+   ##
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("01 Food and Non-alcoholic beveages")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("01 Food and Non-alcoholic beveages")])
+      
+      Tab_Subclass     <- unique(Div1food$Subclass)
+      Tab_Class        <- unique(Div1food$Class)
+
+      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
+      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
       
    ##
    ## Save files our produce some final output of something

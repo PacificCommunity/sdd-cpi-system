@@ -84,10 +84,10 @@
       ##
         source("Programmes/Clean_div1food.r")      # This does blah blah blah
         source("Programmes/Clean_div2alc.r")       # This does blah blah blah
-        #source("Programmes/Clean_div4energy.r")    # This does blah blah blah
-        #source("Programmes/Clean_div6health.r")    # This does blah blah blah
-        #source("Programmes/Clean_div8coms.r")      # This does blah blah blah
-        #source("Programmes/Clean_div10edu.r")      # This does blah blah blah
+        source("Programmes/Clean_div4energy.r")    # This does blah blah blah
+        source("Programmes/Clean_div6health.r")    # This does blah blah blah
+        source("Programmes/Clean_div8coms.r")      # This does blah blah blah
+        source("Programmes/Clean_div10edu.r")      # This does blah blah blah
 
       ##
       ##    STEP 3:  Aggregate all of the cleaned tabs and generated the CPI

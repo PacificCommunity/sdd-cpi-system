@@ -16,16 +16,25 @@
    ##
       load('Data_Intermediate/Div1food.rda')
       load('Data_Intermediate/Div2alc.rda')
+      load('Data_Intermediate/Div4Energy.rda')
+      load('Data_Intermediate/Div6Health.rda')
+      load('Data_Intermediate/Div8Coms.rda')
+      load('Data_Intermediate/Div10Edu.rda')
       
       ##
       ##    Grab the Regimen
       ##
+      load('Data_Intermediate/Regimen.rda')
       
    ##
    ## Step 1: Stick all of the divisions together
    ##
       All_Divisions <- rbind(Div1food,
-                             Div2alc)
+                             Div2alc,
+                             Div4Energy,
+                             Div6Health,
+                             Div8Coms,
+                             Div10Edu)
 
    ##
    ## Step 2: Lets have a look at the uniformity of the classifications
@@ -36,10 +45,10 @@
       ##    Drop these into a CSV for standardisation - only run this code if you have new files which needs standardised
       ##       else it will overwrite your previous corrections.
       ##
-         ## write.csv(data.frame(Old_Name = unique(All_Divisions$Component),
-         ##                      New_Name = unique(All_Divisions$Component)), 
-         ##           file = "Data_Raw/Component_Correction.csv",
-         ##           row.names = FALSE)
+           # write.csv(data.frame(Old_Name = unique(All_Divisions$Component),
+                                # New_Name = unique(All_Divisions$Component)), 
+                     # file = "Data_Raw/Component_Correction.csv",
+                     # row.names = FALSE)
       ##
       ##    Read these from standardisation
       ##
@@ -79,14 +88,63 @@
                                      mean, 
                                      na.rm = TRUE))      
       GeoMeans$Geometric_Mean <- exp(GeoMeans$Geometric_Mean)
-      GeoMeans[GeoMeans$Subclass == "Rice",]
 
+   ##
+   ## Step 4: Generate price changes relative to the '2024-06-15' base period
+   ##
+      GeoMeans <- merge(GeoMeans,
+                        GeoMeans[GeoMeans$Period == "2024-06-15",c("Subclass", "Geometric_Mean")],
+                        by = "Subclass")
+      names(GeoMeans) <- c("Subclass","Period","Current_Price","Base_Period_Price")
+      GeoMeans$Price_Change <- with(GeoMeans, (Current_Price / Base_Period_Price))
+   
+   ##
+   ## Step 5: Assign the Regimen Weights
+   ##
+      Weighted_Data <- merge(GeoMeans,
+                             Regimen,
+                             by = c("Subclass"))
+      Weighted_Data[Weighted_Data$Subclass == "Rice",]
+
+
+   ##
+   ## Step 6: Generate the CPI
+   ##
+      CPI <- with(Weighted_Data,
+                    aggregate(list(Value = (Price_Change * Weights)),
+                              list(Subclass = Subclass,
+                                   Period = Period),
+                            sum, 
+                            na.rm = TRUE)) 
+      CPI[CPI$Subclass == "Rice",]
+
+      CPI <- with(Weighted_Data,
+                    aggregate(list(Value = (Price_Change * Weights)),
+                              list(Period = Period,
+                                   Groups = Groups),
+                            sum, 
+                            na.rm = TRUE)) 
+      CPI <- CPI[order(CPI$Period),]
 
    ##
    ## Save files our produce some final output of something
    ##
-      save(xxxx, file = 'Data_Intermediate/xxxxxxxxxxxxx.rda')
-      save(xxxx, file = 'Data_Output/xxxxxxxxxxxxx.rda')
+      save(Weighted_Data, file = 'Data_Output/Weighted_Data.rda')
+      save(CPI,           file = 'Data_Output/CPI.rda')
+
 ##
 ##    And we're done
 ##
+
+
+      CPI <- with(Weighted_Data,
+                    aggregate(list(Value = (Price_Change * Weights)),
+                              list(Period = Period),
+                            sum, 
+                            na.rm = TRUE)) 
+      CPI <- CPI[order(CPI$Period),]
+      CPI$Base <- CPI$Value[CPI$Period == "2024-06-15"]
+      CPI$Price_Change <- with(CPI, (Value / Base))
+
+
+

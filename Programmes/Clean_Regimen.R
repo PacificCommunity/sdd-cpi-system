@@ -58,7 +58,11 @@
    ##
       names(Regimen) <- c('Class', 'COICOP', 'Item_nos', 'Subclass', 'Weights', 'Groups', 'Division')
       Regimen$Subclass <- str_squish(Regimen$Subclass)
-      Regimen$Subclass <- ifelse(str_detect(Regimen$Subclass, "Condensed Milk with sugar"),"Condensed Milk with Sugar (Carnation)", Regimen$Subclass)
+      Regimen$Subclass <- ifelse(str_detect(Regimen$Subclass, "Condensed Milk with Sugar"),"Condensed Milk with Sugar (Carnation)", 
+                          ifelse(str_detect(Regimen$Subclass, "Apple, Orange"),"Fruit Juice (Apple, Orange)", 
+                          ifelse(str_detect(Regimen$Subclass, "Cola Flavour Soft Drink"),"Cola Flavour Soft Drink (Coca, Pepsi)",Regimen$Subclass)))
+
+      Regimen$Weights  <- as.numeric(Regimen$Weights)
       
       save(Regimen, file = 'Data_Intermediate/Regimen.rda')
 ##

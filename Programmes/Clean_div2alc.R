@@ -88,8 +88,8 @@
    ##
    ## Make sure this detail maps to the Regimen
    ##
-      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Division %in% c("Alcohol", "Tobacco", "Narcotics", "Clothing", "Footwear")])
-      Regimen_Class    <- unique(Regimen$Class[Regimen$Division %in% c("Alcohol", "Tobacco", "Narcotics", "Clothing", "Footwear")])
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("02 Alcoholic beverages, tobbaco & Narcotics", "03 Clothing & footear")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("02 Alcoholic beverages, tobbaco & Narcotics", "03 Clothing & footear")])
       
       Tab_Subclass     <- unique(Div2alc$Subclass)
       Tab_Class        <- unique(Div2alc$Class)
@@ -115,8 +115,8 @@
    ##
    ## Make sure this detail maps to the Regimen
    ##
-      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Division %in% c("Alcohol", "Tobacco", "Narcotics", "Clothing", "Footwear")])
-      Regimen_Class    <- unique(Regimen$Class[Regimen$Division %in% c("Alcohol", "Tobacco", "Narcotics", "Clothing", "Footwear")])
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("02 Alcoholic beverages, tobbaco & Narcotics", "03 Clothing & footear")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("02 Alcoholic beverages, tobbaco & Narcotics", "03 Clothing & footear")])
       
       Tab_Subclass     <- unique(Div2alc$Subclass)
       Tab_Class        <- unique(Div2alc$Class)

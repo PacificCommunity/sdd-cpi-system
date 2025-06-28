@@ -1,92 +1,128 @@
 ##
-##    Programme:  SAMPLE_PROGRAMME.r
+##    Programme:  Clean_div4energy.r
 ##
 ##    Objective:  What is this programme designed to do?
 ##
-##    Author:     <PROGRAMMER>, <TEAM>, <DATE STARTED>
-##    Peer Review:<PROGRAMMER>, <TEAM>, <DATE STARTED>
+##    Author:      Geoffrey Wong, Analysis & Insight Team, Statistics for Development Division, 16 June 2025
+##    Peer Review: James Hogan, Analysis & Insight Team, Statistics for Development Division, 16 June 2025
 ##
 ##
-##
-##    Clear the memory
-##
-rm(list=ls(all=TRUE))
-##
-##    Load some generic functions or colour palattes, depending on what you're doing.
-##
+   ##
+   ##    Clear the memory
+   ##
+      rm(list=ls(all=TRUE))
+   ##
+   ##    Load some generic functions or colour palattes, depending on what you're doing.
+   ##
 
-##
-##    Load data from somewhere
-##
+   ##
+   ##    Load data from somewhere
+   ##
+      load('Data_Intermediate/Regimen.rda')
 
-load("Data_Intermediate/RAWDATA_Div 4,5 energy & HHDXXCPI_calculation_Xmas_Test_Workbook_2025.rda")
-div4energy <- `RAWDATA_Div 4,5 energy & HHDXXCPI_calculation_Xmas_Test_Workbook_2025`
-##
-## Step 1: Fill in the blanks
-## 
-div4energy$Subclass = ""
-div4energy$Code     = ""
-div4energy$Class = ""
+      load("Data_Intermediate/RAWDATA_Div 4,5 energy & HHDXXCPI_calculation_Xmas_Test_Workbook_2025.rda")
+      Div4Energy <- `RAWDATA_Div 4,5 energy & HHDXXCPI_calculation_Xmas_Test_Workbook_2025`
+   ##
+   ## Step 1: Fill in the blanks
+   ## 
+      Div4Energy$Subclass = ""
+      Div4Energy$Code     = ""
+      Div4Energy$Class = ""
+      
+      for (i in 1:nrow(Div4Energy)) 
+      {
+          Div4Energy$Subclass[i] <- ifelse(str_detect(Div4Energy$V1[i],"\\."),Div4Energy$V2[i],"") 
+          Div4Energy$Code[i]     <- ifelse(str_detect(Div4Energy$V1[i],"\\."),Div4Energy$V1[i],"") 
+          Div4Energy$Class[i]    <- ifelse(str_detect(Div4Energy$V1[i],"\\."),
+                                           ifelse(Div4Energy$V2[(i-1)] == "", Div4Energy$V2[(i-2)], Div4Energy$V2[(i-1)]),"")
+          Div4Energy$Class[i]    <- ifelse(Div4Energy$Class[i]=="Geomean", "",Div4Energy$Class[i])
+      }
+      
+      for (i in 2:nrow(Div4Energy)) 
+      {
+        Div4Energy$Subclass[i] <- ifelse((Div4Energy$Subclass[i] == "") & (Div4Energy$Subclass[(i-1)] != ""),
+                                        Div4Energy$Subclass[(i-1)],
+                                        Div4Energy$Subclass[i]) 
+        
+        Div4Energy$Code[i]     <- ifelse((Div4Energy$Code[i] == "") & (Div4Energy$Code[(i-1)] != ""),
+                                       Div4Energy$Code[(i-1)],
+                                       Div4Energy$Code[i]) 
+              
+        Div4Energy$Class[i]    <- ifelse((Div4Energy$Class[i] == "") & (Div4Energy$Class[(i-1)] != ""),
+                                       Div4Energy$Class[(i-1)],
+                                       Div4Energy$Class[i])       
+      }
 
+   ##
+   ## Step 2: Rename the Columns
+   ##
+      names(Div4Energy) <- c("ID", "Component", Div4Energy[4,3:14], "Subclass", "Code", "Class")
+   
+   ##
+   ## Step 3: Make Long
+   ##
+      Div4Energy <- reshape2::melt(Div4Energy,
+                                 id.vars = c("ID", "Component", "Subclass", "Code", "Class"),
+                                 variable.name = "Period")
+      Div4Energy <- Div4Energy[,]
+      Div4Energy <- Div4Energy[Div4Energy$ID != "",]
+      Div4Energy <- Div4Energy[Div4Energy$Component != "",]
+      Div4Energy <- Div4Energy[Div4Energy$Component != "Geomean",]
+      Div4Energy <- Div4Energy[Div4Energy$Subclass  != "",]
+      Div4Energy <- Div4Energy[Div4Energy$Component != Div4Energy$Subclass,]
+      
+      Categories <- unique(Div4Energy$Subclass)
+      
+      for(i in 1:nrow(Div4Energy))
+      {
+        Div4Energy$Code[i] <- paste0(Div4Energy$Code[i], ".", which(Categories == Div4Energy$Subclass[i]), ".", Div4Energy$ID[i])
+        
+      }
+   ##
+   ##    Clean up little odd ball stuff
+   ##
+      Div4Energy$Component <- str_squish(Div4Energy$Component)
+      Div4Energy$Subclass  <- str_squish(Div4Energy$Subclass)
+      Div4Energy$Code      <- str_squish(Div4Energy$Code)
+      Div4Energy$Class     <- str_squish(Div4Energy$Class)
 
-for (i in 1:nrow(div4energy)) 
-{
-  div4energy$Subclass[i]=ifelse(str_detect(div4energy$V1[i],"\\."),div4energy$V2[i],"") 
-  div4energy$Code[i]=ifelse(str_detect(div4energy$V1[i],"\\."),div4energy$V1[i],"") 
-  div4energy$Class[i]=ifelse(str_detect(div4energy$V1[i],"\\."),
-                          ifelse(div4energy$V2[(i-1)] == "", div4energy$V2[(i-2)], div4energy$V2[(i-1)]),
-                          "") 
-  div4energy$Class[i]=ifelse(div4energy$Class[i]=="Geomean", "",div4energy$Class[i])
-}
+      Div4Energy$Period <- as.Date(paste0("15-",Div4Energy$Period ), "%d-%b-%y")
+      Div4Energy$value  <- as.numeric(Div4Energy$value)
 
-for (i in 2:nrow(div4energy)) 
-{
-  div4energy$Subclass[i]=ifelse((div4energy$Subclass[i] == "") & (div4energy$Subclass[(i-1)] != ""),
-                             div4energy$Subclass[(i-1)],
-                             div4energy$Subclass[i]) 
-  
-  div4energy$Code[i]=ifelse((div4energy$Code[i] == "") & (div4energy$Code[(i-1)] != ""),
-                         div4energy$Code[(i-1)],
-                         div4energy$Code[i]) 
-  
-  div4energy$Class[i]=ifelse((div4energy$Class[i] == "") & (div4energy$Class[(i-1)] != ""),
-                          div4energy$Class[(i-1)],
-                          div4energy$Class[i])       }
+   ##
+   ## Make sure this detail maps to the Regimen
+   ##
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("04 Housing, water, electricty and other fuels", "05 Furnishings, household equipment & routine maintainance")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("04 Housing, water, electricty and other fuels", "05 Furnishings, household equipment & routine maintainance")])
+      
+      Tab_Subclass     <- unique(Div4Energy$Subclass)
+      Tab_Class        <- unique(Div4Energy$Class)
 
-##
-## Step 2: Rename the Columns
-##
-names(div4energy) <- c("ID", "Component", div4energy[4,3:14], "Subclass", "Code", "Class")
+      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
+      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
 
-##
-## Step 3: Make Long
-##
-div4energy <- reshape2::melt(div4energy,
-                          id.vars = c("ID", "Component", "Subclass", "Code", "Class"),
-                          variable.name = "Period")
-div4energy <- div4energy[,]
-div4energy <- div4energy[div4energy$ID != "",]
-div4energy <- div4energy[div4energy$Component != "",]
-div4energy <- div4energy[div4energy$Component != "Geomean",]
-div4energy <- div4energy[div4energy$Subclass  != "",]
-div4energy <- div4energy[div4energy$Component != div4energy$Subclass,]
+   ##
+   ## Correct the ones that doesnt
+   ##
+      Div4Energy$Subclass <- ifelse(str_detect(Div4Energy$Subclass, "Flash Light"),"Flash light", 
+                             ifelse(str_detect(Div4Energy$Subclass, "Food Storage Container, Foil"),"Food Storage Container, foil",Div4Energy$Subclass))
 
-Categories <- unique(div4energy$Subclass)
+   ##
+   ## Make sure this detail maps to the Regimen
+   ##
+      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("04 Housing, water, electricty and other fuels", "05 Furnishings, household equipment & routine maintainance")])
+      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("04 Housing, water, electricty and other fuels", "05 Furnishings, household equipment & routine maintainance")])
+      
+      Tab_Subclass     <- unique(Div4Energy$Subclass)
+      Tab_Class        <- unique(Div4Energy$Class)
 
-for(i in 1:nrow(div4energy))
-{
-  div4energy$Code[i] <- paste0(div4energy$Code[i], ".", which(Categories == div4energy$Subclass[i]), ".", div4energy$ID[i])
-  
-}
-
-
-
-div4energy$Period <- as.Date(paste0("15-",div4energy$Period ), "%d-%b-%y")
-
-##
-## Save files our produce some final output of something
-##
-save(div4energy, file = 'Data_Intermediate/div4energy.rda')
+      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
+      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
+      
+   ##
+   ## Save files our produce some final output of something
+   ##
+      save(Div4Energy, file = 'Data_Intermediate/Div4Energy.rda')
 
 ##
 ##    And we're done
