@@ -57,20 +57,21 @@
    ##
    ## Step 2: Rename the Columns
    ##
-      names(Div6Health) <- c("ID", "Component", Div6Health[4,3:14], "Subclass", "Code", "Class")
+      names(Div6Health) <- c("ID", "Price_Source", Div6Health[4,3:14], "Subclass", "Code", "Class")
    
    ##
    ## Step 3: Make Long
    ##
       Div6Health <- reshape2::melt(Div6Health,
-                                 id.vars = c("ID", "Component", "Subclass", "Code", "Class"),
+                                 id.vars = c("ID", "Price_Source", "Subclass", "Code", "Class"),
+                                 value.name = "Measured_Price",
                                  variable.name = "Period")
       Div6Health <- Div6Health[,]
       Div6Health <- Div6Health[Div6Health$ID != "",]
-      Div6Health <- Div6Health[Div6Health$Component != "",]
-      Div6Health <- Div6Health[Div6Health$Component != "Geomean",]
+      Div6Health <- Div6Health[Div6Health$Price_Source != "",]
+      Div6Health <- Div6Health[Div6Health$Price_Source != "Geomean",]
       Div6Health <- Div6Health[Div6Health$Subclass  != "",]
-      Div6Health <- Div6Health[Div6Health$Component != Div6Health$Subclass,]
+      Div6Health <- Div6Health[Div6Health$Price_Source != Div6Health$Subclass,]
       
       Categories <- unique(Div6Health$Subclass)
       
@@ -82,13 +83,13 @@
    ##
    ##    Clean up little odd ball stuff
    ##
-      Div6Health$Component <- str_squish(Div6Health$Component)
+      Div6Health$Price_Source <- str_squish(Div6Health$Price_Source)
       Div6Health$Subclass  <- str_squish(Div6Health$Subclass)
       Div6Health$Code      <- str_squish(Div6Health$Code)
       Div6Health$Class     <- str_squish(Div6Health$Class)
 
       Div6Health$Period <- as.Date(paste0("15-",Div6Health$Period ), "%d-%b-%y")
-      Div6Health$value  <- as.numeric(Div6Health$value)
+      Div6Health$Measured_Price  <- as.numeric(Div6Health$Measured_Price)
 
    ##
    ## Make sure this detail maps to the Regimen

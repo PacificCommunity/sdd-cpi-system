@@ -56,20 +56,21 @@
    ##
    ## Step 2: Rename the Columns
    ##
-      names(Div4Energy) <- c("ID", "Component", Div4Energy[4,3:14], "Subclass", "Code", "Class")
+      names(Div4Energy) <- c("ID", "Price_Source", Div4Energy[4,3:14], "Subclass", "Code", "Class")
    
    ##
    ## Step 3: Make Long
    ##
       Div4Energy <- reshape2::melt(Div4Energy,
-                                 id.vars = c("ID", "Component", "Subclass", "Code", "Class"),
+                                 id.vars = c("ID", "Price_Source", "Subclass", "Code", "Class"),
+                                 value.name = "Measured_Price",
                                  variable.name = "Period")
       Div4Energy <- Div4Energy[,]
       Div4Energy <- Div4Energy[Div4Energy$ID != "",]
-      Div4Energy <- Div4Energy[Div4Energy$Component != "",]
-      Div4Energy <- Div4Energy[Div4Energy$Component != "Geomean",]
+      Div4Energy <- Div4Energy[Div4Energy$Price_Source != "",]
+      Div4Energy <- Div4Energy[Div4Energy$Price_Source != "Geomean",]
       Div4Energy <- Div4Energy[Div4Energy$Subclass  != "",]
-      Div4Energy <- Div4Energy[Div4Energy$Component != Div4Energy$Subclass,]
+      Div4Energy <- Div4Energy[Div4Energy$Price_Source != Div4Energy$Subclass,]
       
       Categories <- unique(Div4Energy$Subclass)
       
@@ -81,13 +82,13 @@
    ##
    ##    Clean up little odd ball stuff
    ##
-      Div4Energy$Component <- str_squish(Div4Energy$Component)
+      Div4Energy$Price_Source <- str_squish(Div4Energy$Price_Source)
       Div4Energy$Subclass  <- str_squish(Div4Energy$Subclass)
       Div4Energy$Code      <- str_squish(Div4Energy$Code)
       Div4Energy$Class     <- str_squish(Div4Energy$Class)
 
       Div4Energy$Period <- as.Date(paste0("15-",Div4Energy$Period ), "%d-%b-%y")
-      Div4Energy$value  <- as.numeric(Div4Energy$value)
+      Div4Energy$Measured_Price  <- as.numeric(Div4Energy$Measured_Price)
 
    ##
    ## Make sure this detail maps to the Regimen

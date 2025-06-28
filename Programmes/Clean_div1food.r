@@ -56,20 +56,21 @@
    ##
    ## Step 2: Rename the Columns
    ##
-      names(Div1food) <- c("ID", "Component", Div1food[4,3:14], "Subclass", "Code", "Class")
+      names(Div1food) <- c("ID", "Price_Source", Div1food[4,3:14], "Subclass", "Code", "Class")
    
    ##
    ## Step 3: Make Long
    ##
       Div1food <- reshape2::melt(Div1food,
-                                 id.vars = c("ID", "Component", "Subclass", "Code", "Class"),
+                                 id.vars = c("ID", "Price_Source", "Subclass", "Code", "Class"),
+                                 value.name = "Measured_Price",
                                  variable.name = "Period")
       Div1food <- Div1food[,]
       Div1food <- Div1food[Div1food$ID != "",]
-      Div1food <- Div1food[Div1food$Component != "",]
-      Div1food <- Div1food[Div1food$Component != "Geomean",]
+      Div1food <- Div1food[Div1food$Price_Source != "",]
+      Div1food <- Div1food[Div1food$Price_Source != "Geomean",]
       Div1food <- Div1food[Div1food$Subclass  != "",]
-      Div1food <- Div1food[Div1food$Component != Div1food$Subclass,]
+      Div1food <- Div1food[Div1food$Price_Source != Div1food$Subclass,]
       
       Categories <- unique(Div1food$Subclass)
       
@@ -81,13 +82,13 @@
    ##
    ##    Clean up little odd ball stuff
    ##
-      Div1food$Component <- str_squish(Div1food$Component)
+      Div1food$Price_Source <- str_squish(Div1food$Price_Source)
       Div1food$Subclass  <- str_squish(Div1food$Subclass)
       Div1food$Code      <- str_squish(Div1food$Code)
       Div1food$Class     <- str_squish(Div1food$Class)
 
       Div1food$Period <- as.Date(paste0("15-",Div1food$Period ), "%d-%b-%y")
-      Div1food$value  <- as.numeric(Div1food$value)
+      Div1food$Measured_Price  <- as.numeric(Div1food$Measured_Price)
 
    ##
    ## Make sure this detail maps to the Regimen

@@ -54,20 +54,21 @@
    ##
    ## Step 2: Rename the Columns
    ##
-      names(Div2alc) <- c("ID", "Component", Div2alc[4,3:14], "Subclass", "Code", "Class")
+      names(Div2alc) <- c("ID", "Price_Source", Div2alc[4,3:14], "Subclass", "Code", "Class")
 
    ##
    ## Step 3: Make Long
    ##
       Div2alc <- reshape2::melt(Div2alc,
-                                 id.vars = c("ID", "Component", "Subclass", "Code", "Class"),
+                                 id.vars = c("ID", "Price_Source", "Subclass", "Code", "Class"),
+                                 value.name = "Measured_Price",
                                  variable.name = "Period")
       Div2alc <- Div2alc[,]
       Div2alc <- Div2alc[Div2alc$ID != "",]
-      Div2alc <- Div2alc[Div2alc$Component != "",]
-      Div2alc <- Div2alc[Div2alc$Component != "Geomean",]
+      Div2alc <- Div2alc[Div2alc$Price_Source != "",]
+      Div2alc <- Div2alc[Div2alc$Price_Source != "Geomean",]
       Div2alc <- Div2alc[Div2alc$Subclass  != "",]
-      Div2alc <- Div2alc[Div2alc$Component != Div2alc$Subclass,]
+      Div2alc <- Div2alc[Div2alc$Price_Source != Div2alc$Subclass,]
 
       Categories <- unique(Div2alc$Subclass)
 
@@ -77,13 +78,13 @@
         
       }
 
-      Div2alc$Component <- str_squish(Div2alc$Component)
+      Div2alc$Price_Source <- str_squish(Div2alc$Price_Source)
       Div2alc$Subclass  <- str_squish(Div2alc$Subclass)
       Div2alc$Code      <- str_squish(Div2alc$Code)
       Div2alc$Class     <- str_squish(Div2alc$Class)
 
       Div2alc$Period <- as.Date(paste0("15-",Div2alc$Period ), "%d-%b-%y")
-      Div2alc$value  <- as.numeric(Div2alc$value)
+      Div2alc$Measured_Price  <- as.numeric(Div2alc$Measured_Price)
 
    ##
    ## Make sure this detail maps to the Regimen

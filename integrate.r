@@ -94,7 +94,7 @@
       ##
          source("Programmes/Bring_Initial_Data_Together.r") # This does blah blah blah
       ##
-      ##    STEP 4:
+      ##    STEP 4: We now have a cleaned regimen and suite of prices. 
       ##
          source("Programmes/xxxxxxxx.r") # This does blah blah blah
       ##

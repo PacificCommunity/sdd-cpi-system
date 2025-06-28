@@ -57,20 +57,21 @@
    ##
    ## Step 2: Rename the Columns
    ##
-      names(Div8Coms) <- c("ID", "Component", Div8Coms[4,3:14], "Subclass", "Code", "Class")
+      names(Div8Coms) <- c("ID", "Price_Source", Div8Coms[4,3:14], "Subclass", "Code", "Class")
    
    ##
    ## Step 3: Make Long
    ##
       Div8Coms <- reshape2::melt(Div8Coms,
-                                 id.vars = c("ID", "Component", "Subclass", "Code", "Class"),
+                                 id.vars = c("ID", "Price_Source", "Subclass", "Code", "Class"),
+                                 value.name = "Measured_Price",
                                  variable.name = "Period")
       Div8Coms <- Div8Coms[,]
       Div8Coms <- Div8Coms[Div8Coms$ID != "",]
-      Div8Coms <- Div8Coms[Div8Coms$Component != "",]
-      Div8Coms <- Div8Coms[Div8Coms$Component != "Geomean",]
+      Div8Coms <- Div8Coms[Div8Coms$Price_Source != "",]
+      Div8Coms <- Div8Coms[Div8Coms$Price_Source != "Geomean",]
       Div8Coms <- Div8Coms[Div8Coms$Subclass  != "",]
-      Div8Coms <- Div8Coms[Div8Coms$Component != Div8Coms$Subclass,]
+      Div8Coms <- Div8Coms[Div8Coms$Price_Source != Div8Coms$Subclass,]
       
       Categories <- unique(Div8Coms$Subclass)
       
@@ -82,13 +83,13 @@
    ##
    ##    Clean up little odd ball stuff
    ##
-      Div8Coms$Component <- str_squish(Div8Coms$Component)
+      Div8Coms$Price_Source <- str_squish(Div8Coms$Price_Source)
       Div8Coms$Subclass  <- str_squish(Div8Coms$Subclass)
       Div8Coms$Code      <- str_squish(Div8Coms$Code)
       Div8Coms$Class     <- str_squish(Div8Coms$Class)
 
       Div8Coms$Period <- as.Date(paste0("15-",Div8Coms$Period ), "%d-%b-%y")
-      Div8Coms$value  <- as.numeric(Div8Coms$value)
+      Div8Coms$Measured_Price  <- as.numeric(Div8Coms$Measured_Price)
 
    ##
    ## Make sure this detail maps to the Regimen
