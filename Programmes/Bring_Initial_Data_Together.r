@@ -136,6 +136,18 @@
       All_Divisions <- merge(All_Divisions,
                              Regimen,
                              by = c("Class", "Subclass"))
+                             
+      All_Divisions <- All_Divisions[,c("Division", "Groups", "Class", "Subclass", "COICOP", "Item_nos", "Weights", "Price_Source", "Period", "Measured_Price")]
+      All_Divisions <- All_Divisions[order(All_Divisions$Division, 
+                                           All_Divisions$Groups, 
+                                           All_Divisions$Class, 
+                                           All_Divisions$Subclass, 
+                                           All_Divisions$COICOP, 
+                                           All_Divisions$Item_nos, 
+                                           All_Divisions$Weights, 
+                                           All_Divisions$Price_Source, 
+                                           All_Divisions$Period, 
+                                           All_Divisions$Measured_Price),]
       
       save(All_Divisions, file = 'Data_Output/All_Divisions.rda')
       save(Weighted_Data, file = 'Data_Output/Weighted_Data.rda')
