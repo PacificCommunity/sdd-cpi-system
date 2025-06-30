@@ -35,7 +35,6 @@
                              Div6Health,
                              Div8Coms,
                              Div10Edu)
-
    ##
    ## Step 2: Lets have a look at the uniformity of the classifications
    ##
@@ -78,6 +77,11 @@
       All_Divisions <- All_Divisions[,names(All_Divisions) != "Price_Source"]              
       names(All_Divisions)[names(All_Divisions) == "New_Name"] <- "Price_Source"
       
+      All_Divisions <- merge(All_Divisions,
+                             Regimen,
+                             by = c("Class", "Subclass"),
+                             all = TRUE)      
+                    
    ##
    ## Step 3: Generate the geomeans at the Subclass level
    ##
@@ -104,7 +108,6 @@
       Weighted_Data <- merge(GeoMeans,
                              Regimen,
                              by = c("Subclass"))
-      Weighted_Data[Weighted_Data$Subclass == "Rice",]
       Weighted_Data <- Weighted_Data[order(Weighted_Data$Division,
                                            Weighted_Data$Groups,
                                            Weighted_Data$Class,
@@ -120,7 +123,6 @@
                                    Period = Period),
                             sum, 
                             na.rm = TRUE)) 
-      CPI[CPI$Subclass == "Rice",]
 
       CPI <- with(Weighted_Data,
                     aggregate(list(Weighted_Price_Change = (Price_Change * Weights)),
@@ -133,12 +135,8 @@
    ##
    ## Save files our produce some final output of something
    ##
-      All_Divisions <- merge(All_Divisions,
-                             Regimen,
-                             by = c("Class", "Subclass"),
-                             all.x = TRUE)
-                             
-      All_Divisions <- All_Divisions[,c("Division", "Groups", "Class", "Subclass", "COICOP", "Item_nos", "Weights", "Price_Source", "Period", "Measured_Price")]
+             
+      All_Divisions <- All_Divisions[,c("Groups", "Division", "Class", "Subclass", "COICOP", "Item_nos", "Weights", "Price_Source", "Period", "Measured_Price")]
       All_Divisions <- All_Divisions[order(All_Divisions$Division, 
                                            All_Divisions$Groups, 
                                            All_Divisions$Class, 
@@ -149,6 +147,8 @@
                                            All_Divisions$Price_Source, 
                                            All_Divisions$Period, 
                                            All_Divisions$Measured_Price),]
+      
+      
       
       save(All_Divisions, file = 'Data_Output/All_Divisions.rda')
       save(Weighted_Data, file = 'Data_Output/Weighted_Data.rda')

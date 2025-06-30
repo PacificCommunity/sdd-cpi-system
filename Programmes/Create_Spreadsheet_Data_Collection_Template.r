@@ -48,16 +48,18 @@
             ##    Fill it up with data
             ##
             
-               This_Store <- All_Divisions[All_Divisions$Price_Source ==  Stores[Each_Store],]
+               This_Store <- All_Divisions[(All_Divisions$Price_Source ==  Stores[Each_Store]) & !is.na(All_Divisions$Price_Source),]
                
                This_Period <- max(This_Store$Period) + month(1)
                
                This_Store <- This_Store[This_Store$Period %in% c(max(This_Store$Period),
                                                                  max(This_Store$Period[This_Store$Period != max(This_Store$Period)])),]
                                                                  
-               This_Store <- reshape2::dcast(This_Store,
-                                             Division + Groups + Class + Subclass + COICOP + Item_nos + Weights + Price_Source ~ Period,
+               This_Store <- reshape2::dcast(This_Store[!is.na(This_Store$Measured_Price),],
+                                             Groups + Division + Class + Subclass + COICOP + Item_nos + Weights + Price_Source ~ Period,
                                              value.var = "Measured_Price")
+               This_Store <- This_Store[order(This_Store$Groups, This_Store$Division, This_Store$Class, -This_Store$Weights),]
+               
             ##
             ##    Headings
             ##
@@ -77,6 +79,39 @@
                current_range[["MergeCells"]] <- TRUE
                current_range[["HorizontalAlignment"]] <- TRUE
                
+               current_range <- current_worksheet$Range("A2:K3")
+               current_range[["Font"]][["Bold"]] <- TRUE
+               current_range[["Font"]][["size"]] <- 14
+               current_range[["Font"]][["Color"]] <- '0'
+
+         
+            ##
+            ##    Align the colomns
+            ##
+               current_range <- current_worksheet$Range("A1")            
+               current_range[["ColumnWidth"]] <- 54.43
+
+               current_range <- current_worksheet$Range("B1")            
+               current_range[["ColumnWidth"]] <- 32.71
+
+               current_range <- current_worksheet$Range("C1")            
+               current_range[["ColumnWidth"]] <- 40.86
+         
+               current_range <- current_worksheet$Range("D1")            
+               current_range[["ColumnWidth"]] <- 25.86
+         
+               current_range <- current_worksheet$Range("E1")            
+               current_range[["ColumnWidth"]] <- 10.71
+         
+               current_range <- current_worksheet$Range("F1")            
+               current_range[["ColumnWidth"]] <- 13.86
+         
+               current_range <- current_worksheet$Range("G1:H1")            
+               current_range[["ColumnWidth"]] <- 11.29
+         
+               current_range <- current_worksheet$Range("I1:K1")            
+               current_range[["ColumnWidth"]] <- 16.14
+                        
                
                for(col in 1:length(This_Store))
                   {
@@ -97,58 +132,13 @@
                            current_range[["Value"]] <- This_Store[row, col]
                         }
                   }               
-               
+
          }      
-         
-         
-         current_workbook$Sheets$Add()
-      
-current_workbook$Sheets()$count()
-current_workbook$Sheets()$Add()
-      
- Sheets <- current_workbook$Sheets()
- Sheets$Add()
-              
-      
-       tic(paste("Reading Worksheet", Directories$Details[File]))
-       current_file <- Workbook$Open(Directories$Details[File])
-         for(j in 1:current_file$worksheets()$count())
-         {
-            Name <- current_file$worksheets(j)$name()
-            ##
-            ##  RDCOMClient keeps breaking, so we're going save each tab as CSV and read it in
-            ##
-             Current_Tab <- current_file$Worksheets(as.character(Name))
-             if(Current_Tab[["ProtectionMode"]] == TRUE){Current_Tab[["ProtectionMode"]] <- FALSE}
-#             Current_Tab$unprotect()
-             unlink("Data_Intermediate/*.csv")
-             result = tryCatch({ 
-                                 ## Current_Tab$Range("A1:IV60000")$RemoveSubtotal()
-                                 Current_Tab$SaveAs(FileName =  paste0(str_replace_all(getwd(), "\\/", "\\\\"), "\\Data_Intermediate\\test.csv"), FileFormat = 6)
-                                 ##
-                                 ##     Stick everything back in an appropriately named data frame and save
-                                 ##
-                                  X <- read.csv(paste0(str_replace_all(getwd(), "\\/", "\\\\\\\\"), "\\\\Data_Intermediate\\\\test.csv"), colClasses = c("character"),header = FALSE)
-                                  X[] <- lapply(X, as.character)
-                                  assign(paste0("RAWDATA_", Name, "XX", Directories$Save_Name[File]), X )
-                                  save(list = paste0("RAWDATA_", Name, "XX", Directories$Save_Name[File]), 
-                                       file = paste0("Data_Intermediate/RAWDATA_", Name, "XX", Directories$Save_Name[File], ".rda"))
-                                  rm(list=paste0("RAWDATA_", Name, "XX", Directories$Save_Name[File]))
-                               }, warning = function(w) {
-                               }, error = function(e) {
-                                   DidntRead <- rbind.fill( DidntRead , data.frame(File = Directories$Details[File],
-                                                                                    Tab = Name))
-                               }, finally = {
-                               })  
-         }
-         ##
-         ##     Close the RDCOMClient spreadsheet
-         ##
-         current_file$Close()
-      toc()
-     }
-  ex$quit()
-  unlink("Data_Intermediate/test.csv")
+   ##
+   ##    Save
+   ## 
+      current_workbook$SaveAs(FileName = paste0(str_replace_all(getwd(), "\\/", "\\\\"), "\\Data_Output\\Spreadsheet_Example.xlsx"))
+      ex$quit()
 
 ##
 ##    And we're done

@@ -102,29 +102,9 @@
 
       Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
       Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
-
-   ##
-   ## Correct the ones that dont fit the Regimen
-   ##
-      Div10Edu$Subclass <- ifelse(str_detect(Div10Edu$Subclass, "Snacks Away From Home"),"Snacks Away from Home", 
-                           ifelse(str_detect(Div10Edu$Subclass, "Restaurants and Bars onsale ALCOHOL"),"Restaurant and Bars onsale ALCOHOL", 
-                           ifelse(str_detect(Div10Edu$Subclass, "Haircut, Beauty Salon"),"Haircut, Beauty salon", 
-                           ifelse(str_detect(Div10Edu$Subclass, "Cosmetic Fragrance"),"Cosmetic Fragance", 
-                           ifelse(str_detect(Div10Edu$Subclass, "Dental Product (Tooth Brush)"),"Dental Product (Tooth brush)", Div10Edu$Subclass)))))
- 
- 
- 
-   ##
-   ## Make sure this detail maps to the Regimen
-   ##
-      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("10 EDUCATION", "11 RESTAURANTS AND HOTELS", "12 MISCELANEOUS GOODS AND SERVICES")])
-      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("10 EDUCATION", "11 RESTAURANTS AND HOTELS", "12 MISCELANEOUS GOODS AND SERVICES")])
       
-      Tab_Subclass     <- unique(Div10Edu$Subclass)
-      Tab_Class        <- unique(Div10Edu$Class)
-
-      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
-      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
+      Class_Not_In_Collection <- Regimen_Class[!(Regimen_Class %in% Tab_Class)]
+      Misspelt_Class          <- Tab_Class[!(Tab_Class %in% Regimen_Class)]
       
    ##
    ## Save files our produce some final output of something

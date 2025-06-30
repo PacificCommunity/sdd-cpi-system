@@ -102,6 +102,9 @@
 
       Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
       Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
+      
+      Class_Not_In_Collection <- Regimen_Class[!(Regimen_Class %in% Tab_Class)]
+      Misspelt_Class          <- Tab_Class[!(Tab_Class %in% Regimen_Class)]
 
    ##
    ## Correct the ones that doesnt

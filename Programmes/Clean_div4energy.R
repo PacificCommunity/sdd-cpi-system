@@ -101,25 +101,10 @@
 
       Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
       Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
-
-   ##
-   ## Correct the ones that doesnt
-   ##
-      Div4Energy$Subclass <- ifelse(str_detect(Div4Energy$Subclass, "Flash Light"),"Flash light", 
-                             ifelse(str_detect(Div4Energy$Subclass, "Food Storage Container, Foil"),"Food Storage Container, foil",Div4Energy$Subclass))
-
-   ##
-   ## Make sure this detail maps to the Regimen
-   ##
-      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("04 Housing, water, electricty and other fuels", "05 Furnishings, household equipment & routine maintainance")])
-      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("04 Housing, water, electricty and other fuels", "05 Furnishings, household equipment & routine maintainance")])
       
-      Tab_Subclass     <- unique(Div4Energy$Subclass)
-      Tab_Class        <- unique(Div4Energy$Class)
+      Class_Not_In_Collection <- Regimen_Class[!(Regimen_Class %in% Tab_Class)]
+      Misspelt_Class          <- Tab_Class[!(Tab_Class %in% Regimen_Class)]
 
-      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
-      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
-      
    ##
    ## Save files our produce some final output of something
    ##

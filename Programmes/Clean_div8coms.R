@@ -102,25 +102,10 @@
 
       Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
       Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
-
-   ##
-   ## Correct the ones that doesnt
-   ##
-      Div8Coms$Subclass <- ifelse(str_detect(Div8Coms$Subclass, "2 Wheels, Motor Cycle"),"2 Wheels, motor Cycle" , 
-                             ifelse(str_detect(Div8Coms$Subclass, "Non-Prescription Medication"),"Non Prescription medication",Div8Coms$Subclass))
-
-   ##
-   ## Make sure this detail maps to the Regimen
-   ##
-      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("08 COMMUNICATION", "09 RECREATION AND CULTURE")])
-      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("08 COMMUNICATION", "09 RECREATION AND CULTURE")])
       
-      Tab_Subclass     <- unique(Div8Coms$Subclass)
-      Tab_Class        <- unique(Div8Coms$Class)
+      Class_Not_In_Collection <- Regimen_Class[!(Regimen_Class %in% Tab_Class)]
+      Misspelt_Class          <- Tab_Class[!(Tab_Class %in% Regimen_Class)]
 
-      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
-      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
-      
    ##
    ## Save files our produce some final output of something
    ##
