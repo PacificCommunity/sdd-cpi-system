@@ -85,7 +85,7 @@
       Div1food$Price_Source <- str_squish(Div1food$Price_Source)
       Div1food$Subclass  <- str_squish(Div1food$Subclass)
       Div1food$Code      <- str_squish(Div1food$Code)
-      Div1food$Class     <- str_squish(Div1food$Class)
+      Div1food$Class     <- str_squish(str_replace_all(Div1food$Class, "\\&", "and"))
 
       Div1food$Period <- as.Date(paste0("15-",Div1food$Period ), "%d-%b-%y")
       Div1food$Measured_Price  <- as.numeric(Div1food$Measured_Price)
@@ -102,29 +102,8 @@
       Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
       Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
 
-   ##
-   ## Correct the ones that doesnt
-   ##
-      Div1food$Subclass <- ifelse(str_detect(Div1food$Subclass, "Condensed Milk with sugar"),"Condensed Milk with Sugar (Carnation)", 
-                           ifelse(str_detect(Div1food$Subclass, "Pop Corns, Twisties"),"Snacks (Pop Corns, Twisties, Bongoes....)", 
-                           ifelse(str_detect(Div1food$Subclass, "Apple, Orange"),"Fruit Juice (Apple, Orange)", 
-                           ifelse(str_detect(Div1food$Subclass, "Cola Flavour Soft Drink"),"Cola Flavour Soft Drink (Coca, Pepsi)", Div1food$Subclass))))
-      ##
-      ##    Make a choice on the "Canned Sliced Pork 198g" choice to code it to the "Other Tinned Meat" catagory
-      ##
-      Div1food$Subclass <- ifelse(str_detect(Div1food$Subclass, "Canned Sliced Pork 198g"),"Other Tinned Meat", Div1food$Subclass)
-   ##
-   ## Make sure this detail maps to the Regimen
-   ##
-      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("01 Food and Non-alcoholic beveages")])
-      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("01 Food and Non-alcoholic beveages")])
-      
-      Tab_Subclass     <- unique(Div1food$Subclass)
-      Tab_Class        <- unique(Div1food$Class)
-
-      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
-      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
-      
+      Class_Not_In_Collection <- Regimen_Class[!(Regimen_Class %in% Tab_Class)]
+      Misspelt_Class          <- Tab_Class[!(Tab_Class %in% Regimen_Class)]
    ##
    ## Save files our produce some final output of something
    ##

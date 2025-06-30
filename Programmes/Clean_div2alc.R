@@ -98,32 +98,8 @@
       Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
       Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
       
-   ##
-   ## Correct the ones that doesnt
-   ##
-      Div2alc$Subclass <- ifelse(str_detect(Div2alc$Subclass, "Whisky, Rum"),"Spirits (Whisky, Rum...)", 
-                           ifelse(str_detect(Div2alc$Subclass, "Raw Fabric"),"Raw Fabric, Calico", 
-                           ifelse(str_detect(Div2alc$Subclass, "Pant,Jean,Short"),"Pant, Jean, Short MEN", 
-                           ifelse(str_detect(Div2alc$Subclass, "Pant,Jean, Short Children"),"Pant, Jean, Short CHILDREN", 
-                           ifelse(str_detect(Div2alc$Subclass, "Pant,Jean, Short INFANT"),"Pant, Jean, Short INFANT", 
-                           ifelse(str_detect(Div2alc$Subclass, "Shirt, T-Shirt WOMEN"),"Shirt, T-shirt WOMEN", 
-                           ifelse(str_detect(Div2alc$Subclass, "Shirt,T-Shirt MEN"), "Shirt, T-shirt MEN", 
-                           ifelse(str_detect(Div2alc$Subclass, "Slippers"),"Slipper", Div2alc$Subclass))))))))
-                           
-      ##
-      ##    The regimen item "Shirt, T-shirt CHILDREN" is not collected
-      ##
-   ##
-   ## Make sure this detail maps to the Regimen
-   ##
-      Regimen_Subclass <- unique(Regimen$Subclass[Regimen$Groups %in% c("02 Alcoholic beverages, tobbaco & Narcotics", "03 Clothing & footear")])
-      Regimen_Class    <- unique(Regimen$Class[Regimen$Groups %in% c("02 Alcoholic beverages, tobbaco & Narcotics", "03 Clothing & footear")])
-      
-      Tab_Subclass     <- unique(Div2alc$Subclass)
-      Tab_Class        <- unique(Div2alc$Class)
-
-      Subclasses_Not_In_Collection <- Regimen_Subclass[!(Regimen_Subclass %in% Tab_Subclass)]
-      Misspelt_Subclasses          <- Tab_Subclass[!(Tab_Subclass %in% Regimen_Subclass)]
+      Class_Not_In_Collection <- Regimen_Class[!(Regimen_Class %in% Tab_Class)]
+      Misspelt_Class          <- Tab_Class[!(Tab_Class %in% Regimen_Class)]
       
    ##
    ## Save files our produce some final output of something
